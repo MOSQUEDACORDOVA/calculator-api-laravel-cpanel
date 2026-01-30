@@ -1,0 +1,300 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: API Laravel
+meta:
+  id: wrk_dfc536ba6a0e49fbb0f49775ed71963c
+  created: 1767663853712
+  modified: 1767663853712
+  description: ""
+collection:
+  - name: API Laravel
+    meta:
+      id: fld_064edab3d96b4c12ab188136c5a6abd6
+      created: 1767663853713
+      modified: 1767663853713
+      sortKey: -1767663851253
+      description: ""
+    children:
+      - url: http://localhost/api/login
+        name: Obtener Token
+        meta:
+          id: req_17a2fc9769974c3f93327a9e6a550288
+          created: 1767663853714
+          modified: 1767663881120
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851252
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "email" : "tester@example.com",
+                "password" : "password123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products
+        name: Obtener lista de productos
+        meta:
+          id: req_7b3e79dbf7674c858f5e6661ddae42c4
+          created: 1767663853715
+          modified: 1767663853715
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851250
+        method: GET
+        parameters:
+          - name: per_page
+            value: "10"
+            disabled: false
+          - name: page
+            value: "2"
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: 1|uozBsSUuFhFZ8jVGb6oQ1Wl9F6tRFVrOcimNEVle502e4e3f
+          prefix: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products/2
+        name: Obtener un producto por ID
+        meta:
+          id: req_abb7643cbfc1478cb1e172b553044744
+          created: 1767663853715
+          modified: 1767663853715
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851249
+        method: GET
+        headers:
+          - name: Accept
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products
+        name: Crear un nuevo producto
+        meta:
+          id: req_eb9b5d4a548e4201ae3caba4acc682f4
+          created: 1767663853715
+          modified: 1767663853715
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851251
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "name":"Laptop",
+                "description":"Dell XPS 13",
+                "price":35.99,
+                "currency_id": 1,
+                "tax_cost": 11.11,
+                "manufacturing_cost":20
+            }
+        headers:
+          - name: Accept
+            value: application/json
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          disabled: false
+          token: 1|uozBsSUuFhFZ8jVGb6oQ1Wl9F6tRFVrOcimNEVle502e4e3f
+          prefix: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products/3/prices
+        name: Crear un nuevo precio para un producto
+        meta:
+          id: req_192bcc65cfec4127883acc51ad353373
+          created: 1767663853716
+          modified: 1767663853716
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851246
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "price":40,
+                "currency_id": 2
+            }
+        headers:
+          - name: Accept
+            value: application/json
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products/5
+        name: Actualizar un producto
+        meta:
+          id: req_afe69104d232453e8b382373be8b0da8
+          created: 1767663853716
+          modified: 1767663853716
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851248
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "name":"Laptop 2",
+                "description":"Dell XPS 13",
+                "price":1299.99,
+                "currency_id": 1,
+                "tax_cost": 11.11,
+                "manufacturing_cost":20
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products/4
+        name: Eliminar un producto
+        meta:
+          id: req_d1fbfe232a0e4f4b8cda82495828b945
+          created: 1767663853716
+          modified: 1767663853716
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851247
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/currencies
+        name: Obtener lista de monedas
+        meta:
+          id: req_66d6482e31ac4baf8fbf56e55790b20a
+          created: 1767663853717
+          modified: 1767663853717
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851243
+        method: GET
+        headers:
+          - name: Accept
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products/8/prices
+        name: Obtener lista de precios de un producto
+        meta:
+          id: req_7089a709e28a46a7aa24083c01dd8733
+          created: 1767663853717
+          modified: 1767663853717
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851244
+        method: GET
+        headers:
+          - name: Accept
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost/api/products/8/prices/1
+        name: Eliminar un precio de un producto
+        meta:
+          id: req_c39ac2ad68814169b2d24d5e64e73cea
+          created: 1767663853717
+          modified: 1767663853717
+          isPrivate: false
+          description: ""
+          sortKey: -1767663851245
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "price":40,
+                "currency_id": 1
+            }
+        headers:
+          - name: Accept
+            value: application/json
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_3aa06003aad7ac64cb3074255cf3942257385f07
+    created: 1767663853719
+    modified: 1767663853719
+environments:
+  name: Base Environment
+  meta:
+    id: env_3aa06003aad7ac64cb3074255cf3942257385f07
+    created: 1767663853718
+    modified: 1767663853718
+    isPrivate: false
