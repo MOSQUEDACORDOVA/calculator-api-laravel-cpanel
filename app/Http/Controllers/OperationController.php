@@ -149,7 +149,30 @@ class OperationController extends Controller
     }
 
     /**
-     * Eliminar historial (opcional).
+     * Eliminar una operación específica por ID.
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $operation = Operation::find($id);
+
+        if (!$operation) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Operación no encontrada',
+            ], 404);
+        }
+
+        $operation->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Operación eliminada correctamente',
+            'deleted_id' => $id,
+        ]);
+    }
+
+    /**
+     * Eliminar todo el historial.
      */
     public function clearHistory(): JsonResponse
     {

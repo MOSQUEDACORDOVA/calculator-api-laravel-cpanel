@@ -35,3 +35,5 @@ tareas pendientes:
 - Corregir errores basicos al solicitar , como que no exista informacion , etc 
 No debe manejar tantos digitos ni tantos decimales,, poner limites 
 - no DEBRIAN HABER OPERACIONES REPETIDAS
+
+- quiero pdoer eliminar uno solo 

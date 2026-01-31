@@ -22,6 +22,7 @@ Route::post('/calculate', [OperationController::class, 'calculate']);
 // Historial de operaciones
 Route::get('/history', [OperationController::class, 'history']);
 Route::get('/history/{id}', [OperationController::class, 'show']);
+Route::delete('/history/{id}', [OperationController::class, 'destroy']);
 Route::delete('/history', [OperationController::class, 'clearHistory']);
 
 // Health check
