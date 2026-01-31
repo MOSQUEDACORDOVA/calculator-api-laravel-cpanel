@@ -14,16 +14,26 @@ class OperationController extends Controller
      * Si la operación ya existe en la BD, devuelve el resultado existente.
      * Si no existe, la calcula y la guarda.
      */
+    /**
+     * Redondear hacia arriba a 2 decimales.
+     */
+    private function roundUp(float $value, int $decimals = 2): float
+    {
+        $multiplier = pow(10, $decimals);
+        return ceil($value * $multiplier) / $multiplier;
+    }
+
     public function calculate(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'num1' => 'required|numeric',
+            'num1' => 'required|numeric|between:-999.99,999.99',
             'operator' => ['required', Rule::in(['+', '-', '*', '/'])],
-            'num2' => 'required|numeric',
+            'num2' => 'required|numeric|between:-999.99,999.99',
         ]);
 
-        $num1 = (float) $validated['num1'];
-        $num2 = (float) $validated['num2'];
+        // Redondear hacia arriba a 2 decimales
+        $num1 = $this->roundUp((float) $validated['num1']);
+        $num2 = $this->roundUp((float) $validated['num2']);
         $operator = $validated['operator'];
 
         // Validar división por cero antes de buscar/calcular
@@ -67,6 +77,9 @@ class OperationController extends Controller
             '*' => $num1 * $num2,
             '/' => $num1 / $num2,
         };
+
+        // Redondear resultado hacia arriba a 2 decimales
+        $result = $this->roundUp($result);
 
         // Guardar en la base de datos
         $operation = Operation::create([

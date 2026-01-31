@@ -2,6 +2,8 @@ Comandos utiles:
 
 docker compose build --no-cache
 docker compose up -d
+docker exec -it calculator-api-laravel composer dump-autoload
+
 
 # Ejecutar migraciones
 docker exec -it calculator-api-laravel php artisan migrate
@@ -36,4 +38,3 @@ tareas pendientes:
 No debe manejar tantos digitos ni tantos decimales,, poner limites 
 - no DEBRIAN HABER OPERACIONES REPETIDAS
 
-- quiero pdoer eliminar uno solo 

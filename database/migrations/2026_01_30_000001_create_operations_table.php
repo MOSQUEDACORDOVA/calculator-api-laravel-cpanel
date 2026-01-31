@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('operations', function (Blueprint $table) {
             $table->id();
-            $table->decimal('num1', 20, 10);
+            $table->decimal('num1', 5, 2); // Máx 3 dígitos enteros + 2 decimales (ej: 999.99)
             $table->string('operator', 1); // +, -, *, /
-            $table->decimal('num2', 20, 10);
-            $table->decimal('result', 20, 10)->nullable();
+            $table->decimal('num2', 5, 2); // Máx 3 dígitos enteros + 2 decimales
+            $table->decimal('result', 8, 2)->nullable(); // Resultado puede ser mayor (999.99 * 999.99)
             $table->timestamps();
         });
     }
