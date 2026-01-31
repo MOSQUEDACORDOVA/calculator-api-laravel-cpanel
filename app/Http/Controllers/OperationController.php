@@ -99,14 +99,12 @@ class OperationController extends Controller
     }
 
     /**
-     * Listar el historial de operaciones.
+     * Listar el historial de operaciones (últimos 20 resultados).
      */
-    public function history(Request $request): JsonResponse
+    public function history(): JsonResponse
     {
-        $limit = $request->query('limit', 50);
-        
         $operations = Operation::orderBy('created_at', 'desc')
-            ->limit($limit)
+            ->limit(20)
             ->get()
             ->map(fn($op) => [
                 'id' => $op->id,
