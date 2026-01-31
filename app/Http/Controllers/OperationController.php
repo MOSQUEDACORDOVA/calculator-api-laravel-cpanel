@@ -10,12 +10,12 @@ use Illuminate\Validation\Rule;
 class OperationController extends Controller
 {
     /**
-     * Redondear hacia arriba a 2 decimales.
+     * Redondear a 2 decimales usando round() estándar (half-up).
+     * Solo se aplica al resultado final, no a los operandos.
      */
-    private function roundUp(float $value, int $decimals = 2): float
+    private function roundResult(float $value, int $decimals = 2): float
     {
-        $multiplier = pow(10, $decimals);
-        return ceil($value * $multiplier) / $multiplier;
+        return round($value, $decimals);
     }
 
     /**
@@ -32,6 +32,9 @@ class OperationController extends Controller
 
     /**
      * Realizar una operación matemática.
+     * - Los operandos se usan tal como se reciben (sin redondear)
+     * - Solo el resultado final se redondea a 2 decimales
+     * - Para el cache, se redondean los operandos a 2 decimales para comparación
      */
     public function calculate(Request $request): JsonResponse
     {
@@ -41,19 +44,24 @@ class OperationController extends Controller
             'num2' => 'required|numeric|between:-999.99,999.99',
         ]);
 
-        $num1 = $this->roundUp((float) $validated['num1']);
-        $num2 = $this->roundUp((float) $validated['num2']);
+        // Valores originales para el cálculo
+        $num1 = (float) $validated['num1'];
+        $num2 = (float) $validated['num2'];
         $operator = $validated['operator'];
+
+        // Valores redondeados para almacenamiento y cache (BD solo soporta 2 decimales)
+        $num1Stored = $this->roundResult($num1);
+        $num2Stored = $this->roundResult($num2);
 
         // Validar división por cero
         if ($operator === '/' && $num2 == 0) {
             return $this->apiResponse(false, 'División por cero no permitida', null, 400);
         }
 
-        // Buscar si la operación ya existe
-        $existingOperation = Operation::where('num1', $num1)
+        // Buscar si la operación ya existe (usando valores redondeados)
+        $existingOperation = Operation::where('num1', $num1Stored)
             ->where('operator', $operator)
-            ->where('num2', $num2)
+            ->where('num2', $num2Stored)
             ->first();
 
         if ($existingOperation) {
@@ -64,7 +72,7 @@ class OperationController extends Controller
             ], 200);
         }
 
-        // Calcular el resultado
+        // Calcular con valores originales
         $result = match ($operator) {
             '+' => $num1 + $num2,
             '-' => $num1 - $num2,
@@ -72,12 +80,14 @@ class OperationController extends Controller
             '/' => $num1 / $num2,
         };
 
-        $result = $this->roundUp($result);
+        // Solo redondear el resultado final
+        $result = $this->roundResult($result);
 
+        // Guardar con valores redondeados (restricción de BD)
         $operation = Operation::create([
-            'num1' => $num1,
+            'num1' => $num1Stored,
             'operator' => $operator,
-            'num2' => $num2,
+            'num2' => $num2Stored,
             'result' => $result,
         ]);
 

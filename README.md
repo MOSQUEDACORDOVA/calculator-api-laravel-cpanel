@@ -22,7 +22,7 @@ API REST sencilla para realizar operaciones matemáticas básicas con persistenc
 - ✅ Cache de operaciones (no repite cálculos existentes)
 - ✅ Historial de operaciones
 - ✅ Límites: máx 3 dígitos enteros + 2 decimales (-999.99 a 999.99)
-- ✅ Redondeo hacia arriba (ceil)
+- ✅ Redondeo estándar a 2 decimales (solo en resultado)
 - ✅ Compatible con cPanel (usa .htaccess)
 - ✅ Docker para desarrollo local
 
@@ -52,15 +52,11 @@ curl -X POST http://localhost:8080/api/calculate \
 ```json
 {
   "success": true,
-  "cached": false,
+  "message": "Operación calculada correctamente",
   "data": {
     "id": 1,
-    "num1": 10,
-    "operator": "+",
-    "num2": 5,
     "result": 15,
-    "expression": "10 + 5 = 15",
-    "created_at": "2026-01-31T12:00:00.000000Z"
+    "cached": false
   }
 }
 ```
@@ -241,7 +237,7 @@ DB_PASSWORD=password
 - **PHP:** 8.2+
 - **Base de datos:** MySQL 8.0
 - **Límites de números:** -999.99 a 999.99
-- **Decimales:** máximo 2, redondeo hacia arriba (ceil)
+- **Decimales:** máximo 2, redondeo estándar (round) solo en el resultado final
 - **Cache de operaciones:** Si una operación ya existe, retorna el resultado almacenado
 
 ---
