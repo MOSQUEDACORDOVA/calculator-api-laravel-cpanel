@@ -147,9 +147,7 @@ class OperationController extends Controller
 
         $operation->delete();
 
-        return $this->apiResponse(true, 'Operación eliminada correctamente', [
-            'deleted_id' => $id,
-        ]);
+        return $this->apiResponse(true, 'Operación eliminada correctamente', null);
     }
 
     /**
