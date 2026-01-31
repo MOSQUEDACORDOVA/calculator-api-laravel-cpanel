@@ -8,11 +8,26 @@ use App\Http\Controllers\OperationController;
 | API Routes - Calculator API
 |--------------------------------------------------------------------------
 |
+| ⚠️  AVISO DE SEGURIDAD
+| Este proyecto es una DEMOSTRACIÓN de cómo implementar una API Laravel
+| en infraestructura legacy como cPanel. NO incluye autenticación ni
+| medidas de seguridad intencionalmente para enfocarse en el despliegue.
+|
+| Para producción, implementar:
+| - Autenticación (Sanctum, Passport)
+| - Rate limiting
+| - CORS apropiado
+| - HTTPS
+|
+|--------------------------------------------------------------------------
 | Endpoints disponibles:
-| POST   /api/calculate     - Realizar una operación
-| GET    /api/history       - Listar historial de operaciones
-| GET    /api/history/{id}  - Obtener una operación específica
-| DELETE /api/history       - Eliminar todo el historial
+|--------------------------------------------------------------------------
+| POST   /api/calculate      - Realizar una operación matemática
+| GET    /api/history        - Listar historial de operaciones
+| GET    /api/history/{id}   - Obtener una operación específica
+| DELETE /api/history/{id}   - Eliminar una operación específica
+| DELETE /api/history        - Eliminar todo el historial
+| GET    /api/health         - Health check del servicio
 |
 */
 

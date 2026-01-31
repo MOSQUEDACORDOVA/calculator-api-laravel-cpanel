@@ -10,11 +10,6 @@ use Illuminate\Validation\Rule;
 class OperationController extends Controller
 {
     /**
-     * Realizar una operación matemática.
-     * Si la operación ya existe en la BD, devuelve el resultado existente.
-     * Si no existe, la calcula y la guarda.
-     */
-    /**
      * Redondear hacia arriba a 2 decimales.
      */
     private function roundUp(float $value, int $decimals = 2): float
@@ -23,6 +18,21 @@ class OperationController extends Controller
         return ceil($value * $multiplier) / $multiplier;
     }
 
+    /**
+     * Formato de respuesta uniforme.
+     */
+    private function apiResponse(bool $success, ?string $message = null, mixed $data = null, int $status = 200): JsonResponse
+    {
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+            'data' => $data,
+        ], $status);
+    }
+
+    /**
+     * Realizar una operación matemática.
+     */
     public function calculate(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -31,20 +41,13 @@ class OperationController extends Controller
             'num2' => 'required|numeric|between:-999.99,999.99',
         ]);
 
-        // Redondear hacia arriba a 2 decimales
         $num1 = $this->roundUp((float) $validated['num1']);
         $num2 = $this->roundUp((float) $validated['num2']);
         $operator = $validated['operator'];
 
-        // Validar división por cero antes de buscar/calcular
+        // Validar división por cero
         if ($operator === '/' && $num2 == 0) {
-            return response()->json([
-                'success' => false,
-                'error' => 'División por cero no permitida',
-                'num1' => $num1,
-                'operator' => $operator,
-                'num2' => $num2,
-            ], 400);
+            return $this->apiResponse(false, 'División por cero no permitida', null, 400);
         }
 
         // Buscar si la operación ya existe
@@ -54,19 +57,10 @@ class OperationController extends Controller
             ->first();
 
         if ($existingOperation) {
-            // Operación ya existe, devolver resultado cacheado
-            return response()->json([
-                'success' => true,
+            return $this->apiResponse(true, 'Operación recuperada de caché', [
+                'id' => $existingOperation->id,
+                'result' => (float) $existingOperation->result,
                 'cached' => true,
-                'data' => [
-                    'id' => $existingOperation->id,
-                    'num1' => (float) $existingOperation->num1,
-                    'operator' => $existingOperation->operator,
-                    'num2' => (float) $existingOperation->num2,
-                    'result' => (float) $existingOperation->result,
-                    'expression' => "{$num1} {$operator} {$num2} = {$existingOperation->result}",
-                    'created_at' => $existingOperation->created_at,
-                ],
             ], 200);
         }
 
@@ -78,10 +72,8 @@ class OperationController extends Controller
             '/' => $num1 / $num2,
         };
 
-        // Redondear resultado hacia arriba a 2 decimales
         $result = $this->roundUp($result);
 
-        // Guardar en la base de datos
         $operation = Operation::create([
             'num1' => $num1,
             'operator' => $operator,
@@ -89,18 +81,10 @@ class OperationController extends Controller
             'result' => $result,
         ]);
 
-        return response()->json([
-            'success' => true,
+        return $this->apiResponse(true, 'Operación calculada correctamente', [
+            'id' => $operation->id,
+            'result' => $result,
             'cached' => false,
-            'data' => [
-                'id' => $operation->id,
-                'num1' => $num1,
-                'operator' => $operator,
-                'num2' => $num2,
-                'result' => $result,
-                'expression' => "{$num1} {$operator} {$num2} = {$result}",
-                'created_at' => $operation->created_at,
-            ],
         ], 201);
     }
 
@@ -114,22 +98,18 @@ class OperationController extends Controller
         $operations = Operation::orderBy('created_at', 'desc')
             ->limit($limit)
             ->get()
-            ->map(function ($op) {
-                return [
-                    'id' => $op->id,
-                    'num1' => $op->num1,
-                    'operator' => $op->operator,
-                    'num2' => $op->num2,
-                    'result' => $op->result,
-                    'expression' => "{$op->num1} {$op->operator} {$op->num2} = {$op->result}",
-                    'created_at' => $op->created_at,
-                ];
-            });
+            ->map(fn($op) => [
+                'id' => $op->id,
+                'num1' => (float) $op->num1,
+                'operator' => $op->operator,
+                'num2' => (float) $op->num2,
+                'result' => (float) $op->result,
+                'created_at' => $op->created_at,
+            ]);
 
-        return response()->json([
-            'success' => true,
+        return $this->apiResponse(true, null, [
             'count' => $operations->count(),
-            'data' => $operations,
+            'operations' => $operations,
         ]);
     }
 
@@ -141,23 +121,16 @@ class OperationController extends Controller
         $operation = Operation::find($id);
 
         if (!$operation) {
-            return response()->json([
-                'success' => false,
-                'error' => 'Operación no encontrada',
-            ], 404);
+            return $this->apiResponse(false, 'Operación no encontrada', null, 404);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'id' => $operation->id,
-                'num1' => $operation->num1,
-                'operator' => $operation->operator,
-                'num2' => $operation->num2,
-                'result' => $operation->result,
-                'expression' => "{$operation->num1} {$operation->operator} {$operation->num2} = {$operation->result}",
-                'created_at' => $operation->created_at,
-            ],
+        return $this->apiResponse(true, null, [
+            'id' => $operation->id,
+            'num1' => (float) $operation->num1,
+            'operator' => $operation->operator,
+            'num2' => (float) $operation->num2,
+            'result' => (float) $operation->result,
+            'created_at' => $operation->created_at,
         ]);
     }
 
@@ -169,17 +142,12 @@ class OperationController extends Controller
         $operation = Operation::find($id);
 
         if (!$operation) {
-            return response()->json([
-                'success' => false,
-                'error' => 'Operación no encontrada',
-            ], 404);
+            return $this->apiResponse(false, 'Operación no encontrada', null, 404);
         }
 
         $operation->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Operación eliminada correctamente',
+        return $this->apiResponse(true, 'Operación eliminada correctamente', [
             'deleted_id' => $id,
         ]);
     }
@@ -189,11 +157,8 @@ class OperationController extends Controller
      */
     public function clearHistory(): JsonResponse
     {
-        $deleted = Operation::truncate();
+        Operation::truncate();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Historial eliminado correctamente',
-        ]);
+        return $this->apiResponse(true, 'Historial eliminado correctamente', null);
     }
 }
