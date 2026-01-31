@@ -123,11 +123,21 @@ docker exec -it calculator-api-laravel bash
 
 ## 📦 Despliegue en cPanel (Producción)
 
-### Paso 1: Preparar archivos
+> **💡 NOTA:** Este método utiliza la **aplicación Laravel que trae cPanel por defecto**. 
+> Simplemente reemplazas el contenido de la carpeta donde cPanel instaló su aplicación Laravel de ejemplo.
 
-1. Comprime todo el proyecto (excepto `vendor/`, `node_modules/`, `.git/`)
-2. Sube el archivo ZIP a cPanel via **File Manager**
-3. Extrae en el directorio deseado (ej: `public_html/calculator-api/`)
+### Paso 0: Crear aplicación Laravel en cPanel
+
+1. En cPanel → **Setup Node.js/Python App** o **Softaculous** → **Laravel**
+2. Instala Laravel en el directorio deseado (ej: `public_html/calculator-api/`)
+3. Esto creará la estructura base de Laravel con la configuración de cPanel ya lista
+
+### Paso 1: Reemplazar con tu proyecto
+
+1. **Elimina** el contenido de la carpeta donde se instaló Laravel (excepto el archivo `.env` si ya lo configuraste)
+2. Comprime tu proyecto (excepto `vendor/`, `node_modules/`, `.git/`)
+3. Sube el archivo ZIP a cPanel via **File Manager**
+4. Extrae en el mismo directorio donde estaba la instalación de Laravel (ej: `public_html/calculator-api/`)
 
 ### Paso 2: Configurar base de datos
 
